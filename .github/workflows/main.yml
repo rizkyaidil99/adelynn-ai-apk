@@ -24,7 +24,7 @@ jobs:
           pip install buildozer
           sudo apt install -y openjdk-17-jdk
           sudo apt install -y zip unzip
-          sudo apt install -y git wget pkg-config libncurses5
+          sudo apt install -y git wget pkg-config libncurses6 libncurses-dev
 
       - name: Build APK
         run: |
