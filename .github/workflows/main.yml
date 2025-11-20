@@ -26,7 +26,24 @@ jobs:
           sudo apt install -y zip unzip
           sudo apt install -y git wget pkg-config libncurses6 libncurses-dev
 
+      - name: Install Android SDK + accept licenses
+        run: |
+          mkdir -p $HOME/android-sdk
+          cd $HOME/android-sdk
+          wget https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O cmd.zip
+          unzip cmd.zip -d cmd
+          mkdir -p cmd/cmdline-tools
+          mv cmd/* cmd/cmdline-tools/ || true
+          export ANDROID_HOME=$HOME/android-sdk
+          export PATH=$ANDROID_HOME/cmd/cmdline-tools/bin:$PATH
+          yes | sdkmanager --licenses
+          sdkmanager --sdk_root=$ANDROID_HOME "platform-tools" "platforms;android-34" "build-tools;34.0.0"
+
       - name: Build APK
+        env:
+          ANDROIDSDK: $HOME/android-sdk
+          ANDROID_HOME: $HOME/android-sdk
+          PATH: $HOME/android-sdk/platform-tools:$HOME/android-sdk/build-tools/34.0.0:$PATH
         run: |
           buildozer android release
 
